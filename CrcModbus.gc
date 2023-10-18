@@ -1,0 +1,35 @@
+/* CRC16
+  -------------------------------------
+  This  macro  transmits a message from
+  the send dialog and appends two bytes 
+  with CRC at the end
+*/
+main()
+{
+  var s;
+  s = calculate_crc()%0xFFFF;
+  queue_putx(0,s&0xFF);
+  queue_putx(0,shr(s,8)&0xFF);
+  queue_send(0);
+  flush();
+}
+
+calculate_crc()
+{
+   var crc,b,i,j;
+   crc = 0xffff;
+   for(i=0; i<get_message_length();i=i+1) {
+    b = get_message_at(i);
+    queue_putx(0, b);
+    crc = crc ^ b;
+    for(j=0;j<8;j=j+1) {
+      if(crc & 0x0001 != 0) {
+        crc = shr(crc, 1);
+        crc = crc ^ 0xA001;
+      } else {
+        crc = shr(crc, 1);
+      }
+    }
+  }
+  return crc;
+}

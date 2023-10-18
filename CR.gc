@@ -1,0 +1,17 @@
+/* CRLF
+  ------------------------------------
+  This macro appends CR & LF characters
+  at the end of a message
+*/
+main()
+{
+  var j,t;
+  for(j=0; j<get_message_length();j=j+1)
+  {
+   t = get_message_at(j);
+   queue_putx(0,t);
+  }
+  queue_putx(0,0x0D);
+  queue_send(0);
+  flush();
+}
